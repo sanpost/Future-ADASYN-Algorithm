@@ -2,6 +2,7 @@
 #  Wizualizacja danych przed i po oversamplingu.
 
 from collections import Counter
+import csv
 import numpy as np
 from FutureAdasyn import FutureAdasyn
 from sklearn.datasets import make_classification
@@ -17,10 +18,10 @@ fig, ax = plt.subplots(1, 1, figsize=(10, 10/1.414))
 ax.scatter(X[:, 0], X[:, 1], c=y)
 plt.xlabel('Feature 1')
 plt.ylabel('Feature 2')
-plt.savefig('original_data.png')
+# plt.savefig('original_data.png')
 
 # Wyświetla ile próbek jest w klasie 0 (mniejszościowej) a ile w klasie 1 (większościowej)
-print("\nLiczba próbek wygenerowanych przed oversamplingiem: ", Counter(y))
+print("\nLiczba próbek syntatycznych wygenerowanych przed oversamplingiem: ", Counter(y))
 
 # Przykład użycia klasy FutureAdasyn
 
@@ -36,10 +37,15 @@ X_resampled, y_resampled = ads.fit_resample(X, y)
 X_resampled_smt, y_resampled_smt = smt.fit_resample(X, y)
 X_resampled_bsmt, y_resampled_bsmt = bsmt.fit_resample(X, y)
 
-print("Liczba próbek syntetycznych po oversamplingu FutureAdasyn: ", Counter(y_resampled_future))
-print("Liczba próbek syntetycznych po oversamplingu ADASYN: ", Counter(y_resampled))
-print("Liczba próbek syntetycznych po oversamplingu SMOTE: ", Counter(y_resampled_smt))
-print("Liczba próbek syntetycznych po oversamplingu BorderlineSMOTE: ", Counter(y_resampled_bsmt))
+# Zapis liczby próbek syntetycznych poszczególnych klas po oversamplingu do pliku 
+
+with open('synthetic_counter.csv', 'w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerow(['Description', 'Class 0', 'Class 1'])
+    writer.writerow(['FutureAdasyn', Counter(y_resampled_future)[0], Counter(y_resampled_future)[1]])
+    writer.writerow(['ADASYN', Counter(y_resampled)[0], Counter(y_resampled)[1]])
+    writer.writerow(['SMOTE', Counter(y_resampled_smt)[0], Counter(y_resampled_smt)[1]])
+    writer.writerow(['BorderlineSMOTE', Counter(y_resampled_bsmt)[0], Counter(y_resampled_bsmt)[1]])
 
 # Generuje obrazy dla czterech algorytmów oversamplingu
 
@@ -55,7 +61,7 @@ for i, method in enumerate(methods):
     axs[i//2, i%2].set_ylabel('Feature 2')
 
 plt.tight_layout()
-plt.savefig('oversampled_data.png')
+# plt.savefig('oversampled_data.png')
 
 # Generuje dane rzeczywiste z pliku
 real_data = np.loadtxt('real_data.csv', delimiter=';')
@@ -67,36 +73,42 @@ plt.figure(figsize=(10, 10/1.414))
 plt.scatter(real_X[:, 0], real_X[:, 1], c=real_y)
 plt.xlabel('Feature 1')
 plt.ylabel('Feature 2')
-plt.savefig('original_real_data.png')
+# plt.savefig('original_real_data.png')
 
 # Wyświetla ile próbek jest w klasie 0 (mniejszościowej) a ile w klasie 1 (większościowej)
-print("\nLiczba próbek z rzeczywistego zbioru danych: ", Counter(real_y))
 
-# Przykład użycia klasy FutureAdasyn dla danych rzeczywistych
+print("Liczba próbek rzeczywistych wygenerowanych przed oversamplingiem: ", Counter(real_y), "\n")
+
+# Zdefiniowanie badanych algorytmów oversamplingu
 
 fads = FutureAdasyn()
 ads = ADASYN()
 smt = SMOTE()
 bsmt = BorderlineSMOTE()
 
-# Za pomocą zaimplementowanego algorytmu "fas" do klasy FutureAdasyn generuje nowe próbki dla danych rzeczywistych
+# Generowanie nowych próbek dla danych rzeczywistych
 
 real_X_resampled_future, real_y_resampled_future = fads.fit_resample(real_X, real_y)
-real_X_resampled, real_y_resampled = ads.fit_resample(real_X, real_y)
+real_X_resampled_ads, real_y_resampled_ads = ads.fit_resample(real_X, real_y)
 real_X_resampled_smt, real_y_resampled_smt = smt.fit_resample(real_X, real_y)
 real_X_resampled_bsmt, real_y_resampled_bsmt = bsmt.fit_resample(real_X, real_y)
 
-print("Liczba próbek po oversamplingu FutureAdasyn dla danych rzeczywistych: ", Counter(real_y_resampled_future))
-print("Liczba próbek po oversamplingu ADASYN dla danych rzeczywistych: ", Counter(real_y_resampled))
-print("Liczba próbek po oversamplingu SMOTE dla danych rzeczywistych: ", Counter(real_y_resampled_smt))
-print("Liczba próbek po oversamplingu BorderlineSMOTE dla danych rzeczywistych: ", Counter(real_y_resampled_bsmt))
+# Zapis liczby próbek rzeczywistych poszczególnych klas po oversamplingu do pliku 
 
-# Generuje obrazy dla czterech algorytmów oversamplingu dla danych rzeczywistych
+with open('real_counter.csv', 'w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerow(['Description', 'Class 0', 'Class 1'])
+    writer.writerow(['FutureAdasyn', Counter(real_y_resampled_future)[0], Counter(real_y_resampled_future)[1]])
+    writer.writerow(['ADASYN', Counter(real_y_resampled_ads)[0], Counter(real_y_resampled_ads)[1]])
+    writer.writerow(['SMOTE', Counter(real_y_resampled_smt)[0], Counter(real_y_resampled_smt)[1]])
+    writer.writerow(['BorderlineSMOTE', Counter(real_y_resampled_bsmt)[0], Counter(real_y_resampled_bsmt)[1]])                   
+
+# Generowanie obrazu dla czterech algorytmów oversamplingu dla danych rzeczywistych
 
 real_fig, real_axs = plt.subplots(2, 2, figsize=(15, 15/1.414))
 
 methods = ['FutureAdasyn', 'ADASYN', 'SMOTE', 'BorderlineSMOTE']
-resampled_data = [(real_X_resampled_future, real_y_resampled_future), (real_X_resampled, real_y_resampled), (real_X_resampled_smt, real_y_resampled_smt), (real_X_resampled_bsmt, real_y_resampled_bsmt)]
+resampled_data = [(real_X_resampled_future, real_y_resampled_future), (real_X_resampled_ads, real_y_resampled_ads), (real_X_resampled_smt, real_y_resampled_smt), (real_X_resampled_bsmt, real_y_resampled_bsmt)]
 
 for i, method in enumerate(methods):
     real_axs[i//2, i%2].scatter(resampled_data[i][0][:, 0], resampled_data[i][0][:, 1], c=resampled_data[i][1])
@@ -105,5 +117,46 @@ for i, method in enumerate(methods):
     real_axs[i//2, i%2].set_ylabel('Feature 2')
 
 plt.tight_layout()
-plt.savefig('oversampled_real_data.png')
+# plt.savefig('oversampled_real_data.png')
 
+from sklearn.naive_bayes import GaussianNB
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
+# Zdefiniowanie pomocniczej funkcji do uruchomienia algorytmu Naive Bayes i wyświetlenia dokładności
+
+def evaluate_gnb(X, y, description):
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=2137)
+    gnb = GaussianNB()
+    gnb.fit(X_train, y_train)
+    y_pred = gnb.predict(X_test)
+    accuracy = accuracy_score(y_test, y_pred)
+    return accuracy
+
+# Przygotowanie danych do testów
+
+datasets = {
+    'FutureAdasyn Synthetic': (X_resampled_future, y_resampled_future),
+    'ADASYN Synthetic': (X_resampled, y_resampled),
+    'SMOTE Synthetic': (X_resampled_smt, y_resampled_smt),
+    'BorderlineSMOTE Synthetic': (X_resampled_bsmt, y_resampled_bsmt),
+    'FutureAdasyn Real': (real_X_resampled_future, real_y_resampled_future),
+    'ADASYN Real': (real_X_resampled_ads, real_y_resampled_ads),
+    'SMOTE Real': (real_X_resampled_smt, real_y_resampled_smt),
+    'BorderlineSMOTE Real': (real_X_resampled_bsmt, real_y_resampled_bsmt)
+}
+
+results = {}
+
+# Uruchomienie testów
+
+for description, (X, y) in datasets.items():
+    results[description] = evaluate_gnb(X, y, description)
+
+# Zapis wyników do pliku csv
+
+with open('gnb_results.csv', 'w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerow(['Description', 'Accuracy'])
+    for description, accuracy in results.items():
+        writer.writerow([description, f"{accuracy:.4f}"])

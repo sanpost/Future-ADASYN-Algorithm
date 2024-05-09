@@ -1,0 +1,9 @@
+Description,Accuracy
+FutureAdasyn Synthetic,0.8750
+ADASYN Synthetic,0.8356
+SMOTE Synthetic,0.8333
+BorderlineSMOTE Synthetic,0.9306
+FutureAdasyn Real,0.7571
+ADASYN Real,0.7289
+SMOTE Real,0.7750
+BorderlineSMOTE Real,0.7393
