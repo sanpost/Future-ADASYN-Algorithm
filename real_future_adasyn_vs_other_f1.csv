@@ -1,0 +1,4 @@
+Method,t-statistic,p-value
+Adasyn,1.3929,0.2012
+BorderlineSMOTE,1.0681,0.3166
+SMOTE,-0.1975,0.8483

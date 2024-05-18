@@ -79,13 +79,6 @@ plt.ylabel('Feature 2')
 
 print("Liczba próbek rzeczywistych wygenerowanych przed oversamplingiem: ", Counter(real_y), "\n")
 
-# Zdefiniowanie badanych algorytmów oversamplingu
-
-fads = FutureAdasyn()
-ads = ADASYN()
-smt = SMOTE()
-bsmt = BorderlineSMOTE()
-
 # Generowanie nowych próbek dla danych rzeczywistych
 
 real_X_resampled_future, real_y_resampled_future = fads.fit_resample(real_X, real_y)
@@ -160,3 +153,34 @@ with open('gnb_results.csv', 'w', newline='') as file:
     writer.writerow(['Description', 'Accuracy'])
     for description, accuracy in results.items():
         writer.writerow([description, f"{accuracy:.4f}"])
+
+from sklearn.model_selection import cross_val_score
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+
+# Zdefiniowanie pomocniczej funkcji do uruchomienia algorytmu k-NN i obliczenia metryk
+def metryki(X, y):
+    knn = KNeighborsClassifier()
+    accuracy_scores = cross_val_score(knn, X, y, cv=5, scoring='accuracy')
+    precision_scores = cross_val_score(knn, X, y, cv=5, scoring='precision')
+    recall_scores = cross_val_score(knn, X, y, cv=5, scoring='recall')
+    f1_scores = cross_val_score(knn, X, y, cv=5, scoring='f1')
+    return accuracy_scores, precision_scores, recall_scores, f1_scores
+
+# Inicjalizacja słownika do przechowywania wyników
+results = {}
+
+# Uruchomienie testów dla k-NN
+for description, (X, y) in datasets.items():
+    accuracy_scores, precision_scores, recall_scores, f1_scores = metryki(X, y)
+    results[description] = {
+        'Accuracy': accuracy_scores,
+        'Precision': precision_scores,
+        'Recall': recall_scores,
+        'F1-score': f1_scores
+    }
+
+# Zapis wyników k-NN do plików .npy dla każdej metryki
+for metric, scores in results.items():
+    for metric_name, metric_scores in scores.items():
+        np.save(f'{metric} {metric_name}.npy', metric_scores)
