@@ -90,94 +90,65 @@ synthetic_future_adasyn_vs_adasyn = ttest_ind(synthetic_Accuracy_Future_Adasyn, 
 synthetic_future_adasyn_vs_bsmote = ttest_ind(synthetic_Accuracy_Future_Adasyn, synthetic_Accuracy_BSmote)
 synthetic_future_adasyn_vs_smote = ttest_ind(synthetic_Accuracy_Future_Adasyn, synthetic_Accuracy_Smote)
 
-with open('real_future_adasyn_vs_other.csv', 'w', newline='') as file:
-    writer = csv.writer(file)
-    writer.writerow(['Method', 't-statistic', 'p-value'])
-    writer.writerow(['Adasyn', real_future_adasyn_vs_adasyn.statistic, real_future_adasyn_vs_adasyn.pvalue])
-    writer.writerow(['BorderlineSMOTE', real_future_adasyn_vs_bsmote.statistic, real_future_adasyn_vs_bsmote.pvalue])
-    writer.writerow(['SMOTE', real_future_adasyn_vs_smote.statistic, real_future_adasyn_vs_smote.pvalue])
+# Funkcja do zapisu wyników do pliku CSV
+def save_results(filename, results):
+    with open(filename, 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(['Method', 't-statistic', 'p-value'])
+        for row in results:
+            writer.writerow(row)
 
-with open('synthetic_future_adasyn_vs_other.csv', 'w', newline='') as file:
-    writer = csv.writer(file)
-    writer.writerow(['Method', 't-statistic', 'p-value'])
-    writer.writerow(['Adasyn', synthetic_future_adasyn_vs_adasyn.statistic, synthetic_future_adasyn_vs_adasyn.pvalue])
-    writer.writerow(['BorderlineSMOTE', synthetic_future_adasyn_vs_bsmote.statistic, synthetic_future_adasyn_vs_bsmote.pvalue])
-    writer.writerow(['SMOTE', synthetic_future_adasyn_vs_smote.statistic, synthetic_future_adasyn_vs_smote.pvalue])
+# Testy t dla Adasyn vs inne metody dla danych rzeczywistych
+real_results_accuracy = [
+    ['Future Adasyn', round(ttest_ind(real_Accuracy_Adasyn, real_Accuracy_Future_Adasyn).statistic, 4), round(ttest_ind(real_Accuracy_Adasyn, real_Accuracy_Future_Adasyn).pvalue, 4)],
+    ['BorderlineSMOTE', round(ttest_ind(real_Accuracy_Adasyn, real_Accuracy_BSmote).statistic, 4), round(ttest_ind(real_Accuracy_Adasyn, real_Accuracy_BSmote).pvalue, 4)],
+    ['SMOTE', round(ttest_ind(real_Accuracy_Adasyn, real_Accuracy_Smote).statistic, 4), round(ttest_ind(real_Accuracy_Adasyn, real_Accuracy_Smote).pvalue, 4)]
+]
+real_results_precision = [
+    ['Future Adasyn', round(ttest_ind(real_Precision_dasyn, real_Precision_Future_Adasyn).statistic, 4), round(ttest_ind(real_Precision_dasyn, real_Precision_Future_Adasyn).pvalue, 4)],
+    ['BorderlineSMOTE', round(ttest_ind(real_Precision_dasyn, real_Precision_BSmote).statistic, 4), round(ttest_ind(real_Precision_dasyn, real_Precision_BSmote).pvalue, 4)],
+    ['SMOTE', round(ttest_ind(real_Precision_dasyn, real_Precision_Smote).statistic, 4), round(ttest_ind(real_Precision_dasyn, real_Precision_Smote).pvalue, 4)]
+]
+real_results_f1 = [
+    ['Future Adasyn', round(ttest_ind(real_F1_Adasyn, real_F1_Future_Adasyn).statistic, 4), round(ttest_ind(real_F1_Adasyn, real_F1_Future_Adasyn).pvalue, 4)],
+    ['BorderlineSMOTE', round(ttest_ind(real_F1_Adasyn, real_F1_BSmote).statistic, 4), round(ttest_ind(real_F1_Adasyn, real_F1_BSmote).pvalue, 4)],
+    ['SMOTE', round(ttest_ind(real_F1_Adasyn, real_F1_Smote).statistic, 4), round(ttest_ind(real_F1_Adasyn, real_F1_Smote).pvalue, 4)]
+]
+real_results_recall = [
+    ['Future Adasyn', round(ttest_ind(real_Recall_Adasyn, real_Recall_Future_Adasyn).statistic, 4), round(ttest_ind(real_Recall_Adasyn, real_Recall_Future_Adasyn).pvalue, 4)],
+    ['BorderlineSMOTE', round(ttest_ind(real_Recall_Adasyn, real_Recall_BSmote).statistic, 4), round(ttest_ind(real_Recall_Adasyn, real_Recall_BSmote).pvalue, 4)],
+    ['SMOTE', round(ttest_ind(real_Recall_Adasyn, real_Recall_Smote).statistic, 4), round(ttest_ind(real_Recall_Adasyn, real_Recall_Smote).pvalue, 4)]
+]
 
-    # Testy t dla Future Adasyn vs inne metody dla danych rzeczywistych - Precyzja
-real_future_adasyn_vs_adasyn_prec = ttest_ind(real_Precision_Future_Adasyn, real_Precision_dasyn)
-real_future_adasyn_vs_bsmote_prec = ttest_ind(real_Precision_Future_Adasyn, real_Precision_BSmote)
-real_future_adasyn_vs_smote_prec = ttest_ind(real_Precision_Future_Adasyn, real_Precision_Smote)
+# Testy t dla Adasyn vs inne metody dla danych syntetycznych
+synthetic_results_accuracy = [
+    ['Future Adasyn', round(ttest_ind(synthetic_Accuracy_Adasyn, synthetic_Accuracy_Future_Adasyn).statistic, 4), round(ttest_ind(synthetic_Accuracy_Adasyn, synthetic_Accuracy_Future_Adasyn).pvalue, 4)],
+    ['BorderlineSMOTE', round(ttest_ind(synthetic_Accuracy_Adasyn, synthetic_Accuracy_BSmote).statistic, 4), round(ttest_ind(synthetic_Accuracy_Adasyn, synthetic_Accuracy_BSmote).pvalue, 4)],
+    ['SMOTE', round(ttest_ind(synthetic_Accuracy_Adasyn, synthetic_Accuracy_Smote).statistic, 4), round(ttest_ind(synthetic_Accuracy_Adasyn, synthetic_Accuracy_Smote).pvalue, 4)]
+]
+synthetic_results_precision = [
+    ['Future Adasyn', round(ttest_ind(synthetic_Precision_dasyn, synthetic_Precision_Future_Adasyn).statistic, 4), round(ttest_ind(synthetic_Precision_dasyn, synthetic_Precision_Future_Adasyn).pvalue, 4)],
+    ['BorderlineSMOTE', round(ttest_ind(synthetic_Precision_dasyn, synthetic_Precision_BSmote).statistic, 4), round(ttest_ind(synthetic_Precision_dasyn, synthetic_Precision_BSmote).pvalue, 4)],
+    ['SMOTE', round(ttest_ind(synthetic_Precision_dasyn, synthetic_Precision_Smote).statistic, 4), round(ttest_ind(synthetic_Precision_dasyn, synthetic_Precision_Smote).pvalue, 4)]
+]
+synthetic_results_f1 = [
+    ['Future Adasyn', round(ttest_ind(synthetic_F1_Adasyn, synthetic_F1_Future_Adasyn).statistic, 4), round(ttest_ind(synthetic_F1_Adasyn, synthetic_F1_Future_Adasyn).pvalue, 4)],
+    ['BorderlineSMOTE', round(ttest_ind(synthetic_F1_Adasyn, synthetic_F1_BSmote).statistic, 4), round(ttest_ind(synthetic_F1_Adasyn, synthetic_F1_BSmote).pvalue, 4)],
+    ['SMOTE', round(ttest_ind(synthetic_F1_Adasyn, synthetic_F1_Smote).statistic, 4), round(ttest_ind(synthetic_F1_Adasyn, synthetic_F1_Smote).pvalue, 4)]
+]
+synthetic_results_recall = [
+    ['Future Adasyn', round(ttest_ind(synthetic_Recall_Adasyn, synthetic_Recall_Future_Adasyn).statistic, 4), round(ttest_ind(synthetic_Recall_Adasyn, synthetic_Recall_Future_Adasyn).pvalue, 4)],
+    ['BorderlineSMOTE', round(ttest_ind(synthetic_Recall_Adasyn, synthetic_Recall_BSmote).statistic, 4), round(ttest_ind(synthetic_Recall_Adasyn, synthetic_Recall_BSmote).pvalue, 4)],
+    ['SMOTE', round(ttest_ind(synthetic_Recall_Adasyn, synthetic_Recall_Smote).statistic, 4), round(ttest_ind(synthetic_Recall_Adasyn, synthetic_Recall_Smote).pvalue, 4)]
+]
 
-# Testy t dla Future Adasyn vs inne metody dla danych rzeczywistych - F1
-real_future_adasyn_vs_adasyn_f1 = ttest_ind(real_F1_Future_Adasyn, real_F1_Adasyn)
-real_future_adasyn_vs_bsmote_f1 = ttest_ind(real_F1_Future_Adasyn, real_F1_BSmote)
-real_future_adasyn_vs_smote_f1 = ttest_ind(real_F1_Future_Adasyn, real_F1_Smote)
+# Zapis wyników do plików CSV
+save_results('real_adasyn_vs_other_accuracy.csv', real_results_accuracy)
+save_results('real_adasyn_vs_other_precision.csv', real_results_precision)
+save_results('real_adasyn_vs_other_f1.csv', real_results_f1)
+save_results('real_adasyn_vs_other_recall.csv', real_results_recall)
 
-# Testy t dla Future Adasyn vs inne metody dla danych rzeczywistych - Recall
-real_future_adasyn_vs_adasyn_recall = ttest_ind(real_Recall_Future_Adasyn, real_Recall_Adasyn)
-real_future_adasyn_vs_bsmote_recall = ttest_ind(real_Recall_Future_Adasyn, real_Recall_BSmote)
-real_future_adasyn_vs_smote_recall = ttest_ind(real_Recall_Future_Adasyn, real_Recall_Smote)
-
-# Testy t dla Future Adasyn vs inne metody dla danych syntetycznych - Precyzja
-synthetic_future_adasyn_vs_adasyn_prec = ttest_ind(synthetic_Precision_Future_Adasyn, synthetic_Precision_dasyn)
-synthetic_future_adasyn_vs_bsmote_prec = ttest_ind(synthetic_Precision_Future_Adasyn, synthetic_Precision_BSmote)
-synthetic_future_adasyn_vs_smote_prec = ttest_ind(synthetic_Precision_Future_Adasyn, synthetic_Precision_Smote)
-
-# Testy t dla Future Adasyn vs inne metody dla danych syntetycznych - F1
-synthetic_future_adasyn_vs_adasyn_f1 = ttest_ind(synthetic_F1_Future_Adasyn, synthetic_F1_Adasyn)
-synthetic_future_adasyn_vs_bsmote_f1 = ttest_ind(synthetic_F1_Future_Adasyn, synthetic_F1_BSmote)
-synthetic_future_adasyn_vs_smote_f1 = ttest_ind(synthetic_F1_Future_Adasyn, synthetic_F1_Smote)
-
-# Testy t dla Future Adasyn vs inne metody dla danych syntetycznych - Recall
-synthetic_future_adasyn_vs_adasyn_recall = ttest_ind(synthetic_Recall_Future_Adasyn, synthetic_Recall_Adasyn)
-synthetic_future_adasyn_vs_bsmote_recall = ttest_ind(synthetic_Recall_Future_Adasyn, synthetic_Recall_BSmote)
-synthetic_future_adasyn_vs_smote_recall = ttest_ind(synthetic_Recall_Future_Adasyn, synthetic_Recall_Smote)
-
-# Zapis wyników do plików CSV dla danych rzeczywistych - Precyzja
-with open('real_future_adasyn_vs_other_precision.csv', 'w', newline='') as file:
-    writer = csv.writer(file)
-    writer.writerow(['Method', 't-statistic', 'p-value'])
-    writer.writerow(['Adasyn', round(real_future_adasyn_vs_adasyn_prec.statistic, 4), round(real_future_adasyn_vs_adasyn_prec.pvalue, 4)])
-    writer.writerow(['BorderlineSMOTE', round(real_future_adasyn_vs_bsmote_prec.statistic, 4), round(real_future_adasyn_vs_bsmote_prec.pvalue, 4)])
-    writer.writerow(['SMOTE', round(real_future_adasyn_vs_smote_prec.statistic, 4), round(real_future_adasyn_vs_smote_prec.pvalue, 4)])
-
-# Zapis wyników do plików CSV dla danych rzeczywistych - F1
-with open('real_future_adasyn_vs_other_f1.csv', 'w', newline='') as file:
-    writer = csv.writer(file)
-    writer.writerow(['Method', 't-statistic', 'p-value'])
-    writer.writerow(['Adasyn', round(real_future_adasyn_vs_adasyn_f1.statistic, 4), round(real_future_adasyn_vs_adasyn_f1.pvalue, 4)])
-    writer.writerow(['BorderlineSMOTE', round(real_future_adasyn_vs_bsmote_f1.statistic, 4), round(real_future_adasyn_vs_bsmote_f1.pvalue, 4)])
-    writer.writerow(['SMOTE', round(real_future_adasyn_vs_smote_f1.statistic, 4), round(real_future_adasyn_vs_smote_f1.pvalue, 4)])
-
-# Zapis wyników do plików CSV dla danych rzeczywistych - Recall
-with open('real_future_adasyn_vs_other_recall.csv', 'w', newline='') as file:
-    writer = csv.writer(file)
-    writer.writerow(['Method', 't-statistic', 'p-value'])
-    writer.writerow(['Adasyn', round(real_future_adasyn_vs_adasyn_recall.statistic, 4), round(real_future_adasyn_vs_adasyn_recall.pvalue, 4)])
-    writer.writerow(['BorderlineSMOTE', round(real_future_adasyn_vs_bsmote_recall.statistic, 4), round(real_future_adasyn_vs_bsmote_recall.pvalue, 4)])
-    writer.writerow(['SMOTE', round(real_future_adasyn_vs_smote_recall.statistic, 4), round(real_future_adasyn_vs_smote_recall.pvalue, 4)])
-
-# Zapis wyników do plików CSV dla danych syntetycznych - Precyzja
-with open('synthetic_future_adasyn_vs_other_precision.csv', 'w', newline='') as file:
-    writer = csv.writer(file)
-    writer.writerow(['Method', 't-statistic', 'p-value'])
-    writer.writerow(['Adasyn', round(synthetic_future_adasyn_vs_adasyn_prec.statistic, 4), round(synthetic_future_adasyn_vs_adasyn_prec.pvalue, 4)])
-    writer.writerow(['BorderlineSMOTE', round(synthetic_future_adasyn_vs_bsmote_prec.statistic, 4), round(synthetic_future_adasyn_vs_bsmote_prec.pvalue, 4)])
-    writer.writerow(['SMOTE', round(synthetic_future_adasyn_vs_smote_prec.statistic, 4), round(synthetic_future_adasyn_vs_smote_prec.pvalue, 4)])
-
-# Zapis wyników do plików CSV dla danych syntetycznych - F1
-with open('synthetic_future_adasyn_vs_other_f1.csv', 'w', newline='') as file:
-    writer = csv.writer(file)
-    writer.writerow(['Method', 't-statistic', 'p-value'])
-    writer.writerow(['Adasyn', round(synthetic_future_adasyn_vs_adasyn_f1.statistic, 4), round(synthetic_future_adasyn_vs_adasyn_f1.pvalue, 4)])
-    writer.writerow(['BorderlineSMOTE', round(synthetic_future_adasyn_vs_bsmote_f1.statistic, 4), round(synthetic_future_adasyn_vs_bsmote_f1.pvalue, 4)])
-    writer.writerow(['SMOTE', round(synthetic_future_adasyn_vs_smote_f1.statistic, 4), round(synthetic_future_adasyn_vs_smote_f1.pvalue, 4)])
-
-# Zapis wyników do plików CSV dla danych syntetycznych - Recall
-with open('synthetic_future_adasyn_vs_other_recall.csv', 'w', newline='') as file:
-    writer = csv.writer(file)
-    writer.writerow(['Method', 't-statistic', 'p-value'])
-    writer.writerow(['Adasyn', round(synthetic_future_adasyn_vs_adasyn_recall.statistic, 4), round(synthetic_future_adasyn_vs_adasyn_recall.pvalue, 4)])
-    writer.writerow(['BorderlineSMOTE', round(synthetic_future_adasyn_vs_bsmote_recall.statistic, 4), round(synthetic_future_adasyn_vs_bsmote_recall.pvalue, 4)])
-    writer.writerow(['SMOTE', round(synthetic_future_adasyn_vs_smote_recall.statistic, 4), round(synthetic_future_adasyn_vs_smote_recall.pvalue, 4)])
+save_results('synthetic_adasyn_vs_other_accuracy.csv', synthetic_results_accuracy)
+save_results('synthetic_adasyn_vs_other_precision.csv', synthetic_results_precision)
+save_results('synthetic_adasyn_vs_other_f1.csv', synthetic_results_f1)
+save_results('synthetic_adasyn_vs_other_recall.csv', synthetic_results_recall)
