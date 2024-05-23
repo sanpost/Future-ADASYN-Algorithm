@@ -1,0 +1,4 @@
+Method,t-statistic,p-value
+Future Adasyn,-0.9037,0.3926
+BorderlineSMOTE,-2.4333,0.041
+SMOTE,-0.9661,0.3623
