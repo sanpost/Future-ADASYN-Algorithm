@@ -167,7 +167,7 @@ def metryki(X, y):
     f1_scores = cross_val_score(knn, X, y, cv=5, scoring='f1')
     return accuracy_scores, precision_scores, recall_scores, f1_scores
 
-# Inicjalizacja słownika do przechowywania wyników
+# Inicjalizacja do przechowywania wyników
 results = {}
 
 # Uruchomienie testów dla k-NN
